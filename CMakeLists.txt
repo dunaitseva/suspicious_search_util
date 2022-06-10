@@ -13,7 +13,8 @@ set(INCLUDE_DIR ${PROJECT_DIR}/include)
 set(LIB_NAME SuspiciousSearchUtilLib)
 add_library(
         ${LIB_NAME}
-        ${SOURCE_DIR}/SuspiciousStorage.cpp
+        ${SOURCE_DIR}/SuspiciousEntryStorage.cpp
+        ${SOURCE_DIR}/Analyzer.cpp
 )
 target_include_directories(${LIB_NAME} PUBLIC ${INCLUDE_DIR})
 

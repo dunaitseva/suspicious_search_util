@@ -6,6 +6,7 @@
 #include <string_view>
 #include <list>
 #include <exception>
+#include <system_error>
 
 namespace ffinder {
     namespace fs = std::filesystem;
@@ -26,6 +27,7 @@ namespace ffinder {
         };
 
         class NotDirectory : FinderException {
+        public:
             const char *what() const noexcept override {
                 return "Specified filesystem object is not a directory";
             }
@@ -57,6 +59,10 @@ namespace ffinder {
         PathType extension;
     };
 
+    using FileType = File;
+    using PathType = FileType::PathType;
+    using FileList = std::list<FileType>;
+
     /**
      * Basic class, that provides an interface for creating classes that return a list of
      * files contained in a directory, with additional custom logic.
@@ -70,9 +76,6 @@ namespace ffinder {
     class BasicFilesFinder {
     public:
         using IteratorType = Iter;
-        using FileType = File;
-        using PathType = FileType::PathType;
-        using FileList = std::list<FileType>;
 
         BasicFilesFinder() = default;
 
@@ -95,7 +98,7 @@ namespace ffinder {
     };
 
     template<typename Iter>
-    BasicFilesFinder<Iter>::BasicFilesFinder(const BasicFilesFinder<Iter>::PathType &dir_name) : m_dir_name(dir_name) {
+    BasicFilesFinder<Iter>::BasicFilesFinder(const PathType &dir_name) : m_dir_name(dir_name) {
         if (!fs::exists(m_dir_name)) {
             throw exceptions::DirectoryNotFound();
         }
@@ -108,12 +111,13 @@ namespace ffinder {
     template<typename Iter>
     BasicFilesFinder<Iter>::BasicFilesFinder(const PathType &dir_name, exceptions::ErrorCodes &err_code) noexcept
             : m_dir_name(dir_name) {
-        if (!fs::exists(m_dir_name)) {
+        std::error_code ec;
+        if (!fs::exists(m_dir_name, ec)) {
             err_code = exceptions::ErrorCodes::NotExist;
             return;
         }
 
-        if (!fs::is_directory(m_dir_name)) {
+        if (!fs::is_directory(m_dir_name, ec)) {
             err_code = exceptions::ErrorCodes::NotDir;
             return;
         }
@@ -129,8 +133,6 @@ namespace ffinder {
     class RegularBasicFileFinder : public BasicFilesFinder<Iter> {
     public:
         using IteratorType = Iter;
-        using PathType = typename BasicFilesFinder<Iter>::PathType;
-        using FileList = typename BasicFilesFinder<Iter>::FileList;
         static constexpr std::string_view DefaultPath = ".";
 
         RegularBasicFileFinder() : BasicFilesFinder<Iter>(DefaultPath) {}
@@ -148,7 +150,7 @@ namespace ffinder {
     };
 
     template<typename Iter>
-    typename RegularBasicFileFinder<Iter>::FileList RegularBasicFileFinder<Iter>::CreateFilesList() const {
+    FileList RegularBasicFileFinder<Iter>::CreateFilesList() const {
         FileList regular_files_list;
         // Iterate over directory and find all regular files.
         for (const auto &path_entry: IteratorType{BasicFilesFinder<Iter>::m_dir_name}) {

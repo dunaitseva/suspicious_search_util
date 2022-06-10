@@ -1,25 +1,25 @@
 #include "gtest/gtest.h"
 
-#include "SuspiciousStorage.h"
+#include "SuspiciousEntryStorage.h"
 
 class LightStorageGetAddTests : public ::testing::Test {
 protected:
-    suspicious::SuspiciousStorage::ExtensionType valid_extension = ".js";
-    suspicious::SuspiciousStorage::ExtensionType invalid_extension1 = "js";
-    suspicious::SuspiciousStorage::ExtensionType invalid_extension2 = "..js";
-    suspicious::SuspiciousStorage::ExtensionType invalid_extension3 = ".";
+    suspicious::SuspiciousEntryStorage::ExtensionType valid_extension = ".js";
+    suspicious::SuspiciousEntryStorage::ExtensionType invalid_extension1 = "js";
+    suspicious::SuspiciousEntryStorage::ExtensionType invalid_extension2 = "..js";
+    suspicious::SuspiciousEntryStorage::ExtensionType invalid_extension3 = ".";
 
-    suspicious::SuspiciousStorage::SuspiciousEntryType suspicious_entry1 = "<script>evil_script()</script>";
-    suspicious::SuspiciousStorage::SuspiciousEntryType suspicious_entry2 = "<script>very_evil_script()</script>";
-    suspicious::SuspiciousStorage::SuspiciousEntryType suspicious_entry3 = "<script>very_very_evil_script()</script>";
+    suspicious::SuspiciousEntryStorage::SuspiciousEntryType suspicious_entry1 = "<script>evil_script()</script>";
+    suspicious::SuspiciousEntryStorage::SuspiciousEntryType suspicious_entry2 = "<script>very_evil_script()</script>";
+    suspicious::SuspiciousEntryStorage::SuspiciousEntryType suspicious_entry3 = "<script>very_very_evil_script()</script>";
 };
 
 class StorageAccessorTests : public ::testing::Test {
 protected:
     suspicious::LightSuspiciousStorage storage;
-    suspicious::SuspiciousStorage::ExtensionType valid_extension = ".js";
-    suspicious::SuspiciousStorage::ExtensionType invalid_extension1 = "js";
-    suspicious::SuspiciousStorage::ExtensionType invalid_extension2 = ".exe";
+    suspicious::SuspiciousEntryStorage::ExtensionType valid_extension = ".js";
+    suspicious::SuspiciousEntryStorage::ExtensionType invalid_extension1 = "js";
+    suspicious::SuspiciousEntryStorage::ExtensionType invalid_extension2 = ".exe";
     size_t valid_storage_expected_size = 3;
 
     void SetUp() {

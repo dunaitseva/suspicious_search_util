@@ -1,5 +1,5 @@
-#ifndef SUSPICIOUSSEARCHUTIL_SUSPICIOUSSTORAGE_H
-#define SUSPICIOUSSEARCHUTIL_SUSPICIOUSSTORAGE_H
+#ifndef SUSPICIOUSSEARCHUTIL_SUSPICIOUSENTRYSTORAGE_H
+#define SUSPICIOUSSEARCHUTIL_SUSPICIOUSENTRYSTORAGE_H
 
 #include <string>
 #include <unordered_set>
@@ -11,58 +11,57 @@ namespace suspicious {
      * they can return a set of suspicious occurrences in a file by a given extension.
      * At the user side it looks like key-value storage.
      */
-    class SuspiciousStorage {
+    class SuspiciousEntryStorage {
     public:
         using StringType = std::string;
         using ExtensionType = StringType;
         using SuspiciousEntryType = StringType;
-        using SuspiciousSequence = std::unordered_set<SuspiciousEntryType>;
+        using SuspiciousEntrySequence = std::unordered_set<SuspiciousEntryType>;
 
         static constexpr size_t MIN_EXTENSION_SIZE = 2;
         static constexpr char EXTENSION_DELIMITER = '.';
 
-        SuspiciousStorage() = default;
+        SuspiciousEntryStorage() = default;
 
         virtual void Add(const ExtensionType &extension, const SuspiciousEntryType &suspicious_entry) = 0;
-        virtual SuspiciousSequence Get(const ExtensionType &extension) const = 0;
+        virtual SuspiciousEntrySequence Get(const ExtensionType &extension) const = 0;
 
-        virtual ~SuspiciousStorage() = default;
+        virtual ~SuspiciousEntryStorage() = default;
     };
 
 
     /**
-     * Simplest implementation of SuspiciousStorage. Based on hash table
+     * Simplest implementation of SuspiciousEntryStorage. Based on hash table
      */
-    class LightSuspiciousStorage : public SuspiciousStorage {
+    class LightSuspiciousStorage : public SuspiciousEntryStorage {
     public:
-        using HashtableType = std::unordered_map<ExtensionType, SuspiciousSequence>;
+        using HashtableType = std::unordered_map<ExtensionType, SuspiciousEntrySequence>;
 
         LightSuspiciousStorage() = default;
 
         void Add(const ExtensionType &extension, const SuspiciousEntryType &suspicious_entry) override;
-        virtual SuspiciousSequence Get(const ExtensionType &extension) const override;
+        virtual SuspiciousEntrySequence Get(const ExtensionType &extension) const override;
     private:
         HashtableType m_hash_table;
     };
 
     /**
      * Accessor, adds DIP to storage related work.
-     * @tparam Storage SuspiciousStorage or derived classes
+     * @tparam Storage SuspiciousEntryStorage or derived classes
      */
-    template<typename Storage>
     class StorageAccessor {
     public:
         StorageAccessor() = delete;
-        explicit StorageAccessor(Storage &storage) : m_storage(storage) {}
+        explicit StorageAccessor(SuspiciousEntryStorage &storage) : m_storage(storage) {}
 
-        SuspiciousStorage::SuspiciousSequence GetSuspiciousSequence(const SuspiciousStorage::ExtensionType &extension) {
+        SuspiciousEntryStorage::SuspiciousEntrySequence GetSuspiciousSequence(const SuspiciousEntryStorage::ExtensionType &extension) {
             return m_storage.Get(extension);
         }
 
     private:
-        Storage &m_storage;
+        SuspiciousEntryStorage &m_storage;
     };
 }
 
 
-#endif //SUSPICIOUSSEARCHUTIL_SUSPICIOUSSTORAGE_H
+#endif //SUSPICIOUSSEARCHUTIL_SUSPICIOUSENTRYSTORAGE_H

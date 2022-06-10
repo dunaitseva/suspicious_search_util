@@ -1,4 +1,4 @@
-#include "SuspiciousStorage.h"
+#include "SuspiciousEntryStorage.h"
 
 namespace suspicious {
     void LightSuspiciousStorage::Add(const ExtensionType &extension, const SuspiciousEntryType &suspicious_entry) {
@@ -9,7 +9,7 @@ namespace suspicious {
         }
     }
 
-    SuspiciousStorage::SuspiciousSequence LightSuspiciousStorage::Get(const ExtensionType &extension) const {
+    SuspiciousEntryStorage::SuspiciousEntrySequence LightSuspiciousStorage::Get(const ExtensionType &extension) const {
         if (m_hash_table.count(extension) == 0) {
             return {};
         }
