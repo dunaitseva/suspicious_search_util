@@ -133,6 +133,7 @@ namespace suspicious {
 
         FileAnalyzer(const FileType &file, StorageAccessor &accessor) : m_file(file), m_accessor(accessor),
                                                                         m_error_indicator(false) {}
+
         /**
          * This function performs a complete analysis on the file.
          * @return Decision if file suspicious.
@@ -203,6 +204,16 @@ namespace suspicious {
 
     protected:
         ScannerShPtr CreateScanner() override;
+    };
+
+    class DefaultFileAnalyzer : public FileAnalyzer {
+    public:
+        bool AnalyzeFile() override { return false; }
+
+        DefaultFileAnalyzer(const FileType &file, StorageAccessor &accessor) : FileAnalyzer(file, accessor) {}
+
+    protected:
+        ScannerShPtr CreateScanner() override { return {}; }
     };
 
     FileAnalyzer::AnalyzerShPtr CreateAnalyzerByExtension(const ffinder::File &file, StorageAccessor &accessor);

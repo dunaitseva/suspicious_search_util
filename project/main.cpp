@@ -6,11 +6,14 @@
 #include "DirectoryReport.h"
 #include "SuspiciousEntryStorage.h"
 
+constexpr std::string_view open_report = "====== Scan result ======";
+constexpr std::string_view close_report = "=========================";
+
 constexpr size_t EXPECTED_ARGS_AMOUNT = 2;
 constexpr size_t PATH_TO_DIRECTORY_ARG = 1;
 
 const suspicious::Filter filter = {
-        {".js", "JS"},
+        {".js",  "JS"},
         {".cmd", "CMD"},
         {".bat", "CMD"},
         {".exe", "EXE"},
@@ -45,18 +48,23 @@ int main(int argc, char *argv[]) {
     }
 
     suspicious::ffinder::exceptions::ErrorCodes ec;
-    suspicious::ffinder::RegualarFileFinder finder(argv[PATH_TO_DIRECTORY_ARG], ec);
+    suspicious::ffinder::RRegualarFileFinder finder(argv[PATH_TO_DIRECTORY_ARG], ec);
     if (ec != suspicious::ffinder::exceptions::ErrorCodes::OK) {
         suspicious::ffinder::exceptions::LogError(std::cerr, ec);
         return EXIT_FAILURE;
     }
 
+    auto start = suspicious::GetTimePoint();
     suspicious::ffinder::FileList files_list = finder.CreateFilesList();
     suspicious::LightSuspiciousStorage storage;
     LoadStorage(storage);
 
     auto report = suspicious::AnalyzeDirectory(files_list, storage, filter);
+    auto end = suspicious::GetTimePoint();
 
+    std::cout << open_report << std::endl;
     std::cout << report << std::endl;
+    std::cout << suspicious::GetFormattedTime(end - start) << std::endl;
+    std::cout << close_report << std::endl;
     return EXIT_SUCCESS;
 }

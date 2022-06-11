@@ -38,7 +38,7 @@ namespace suspicious {
         bool decision = false;
         for (size_t i = 0; i < max_threads; ++i) {
             // Open file for every thread
-            stream_pool[i].open(m_file.absolute_path);
+            stream_pool[i].open(m_file.absolute_path, std::ios::in | std::ios::binary);
             if (!stream_pool[i].is_open()) {
                 // Return from function and set error flag if
                 // file was not open
@@ -110,7 +110,7 @@ namespace suspicious {
             return std::make_unique<ExeFileAnalyzer>(file, accessor);
         }
 
-        return {};
+        return std::make_unique<DefaultFileAnalyzer>(file, accessor);
     }
 
 }

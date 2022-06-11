@@ -1,5 +1,9 @@
 #include "DirectoryReport.h"
 
+#include <sstream>
+#include <iostream>
+#include <algorithm>
+
 #include "Analyzer.h"
 
 namespace suspicious {
@@ -10,6 +14,10 @@ namespace suspicious {
         }
 
         Report result_report;
+
+        // Copy labels to report table
+        std::for_each(filter.begin(), filter.end(),
+                      [&result_report](auto &pair) { result_report.table.insert_or_assign(pair.second, 0); });
 
         StorageAccessor accessor(storage);
         for (const auto &file: file_list) {
@@ -30,7 +38,22 @@ namespace suspicious {
         for (const auto &[label, count]: report.table) {
             os << label << " detects: " << count << std::endl;
         }
-        os << "Errors: " << report.errors << std::endl;
+        os << "Errors: " << report.errors;
         return os;
+    }
+
+    TimePoint GetTimePoint() {
+        return std::chrono::steady_clock::now();
+    }
+
+    StringType GetFormattedTime(Duration dur) {
+        using Hours = std::chrono::hours;
+        using Minutes = std::chrono::minutes;
+        using Seconds = std::chrono::seconds;
+        std::ostringstream ss;
+        ss << std::chrono::duration_cast<Hours>(dur).count() << ':'
+           << std::chrono::duration_cast<Minutes>(dur).count() << ':'
+           << std::chrono::duration_cast<Seconds>(dur).count();
+        return ss.str();
     }
 }

@@ -3,6 +3,7 @@
 
 #include <unordered_map>
 #include <ostream>
+#include <chrono>
 
 #include "Def.h"
 #include "FileFinder.h"
@@ -14,6 +15,8 @@ namespace suspicious {
      * that would store in report as value. Example {".js", "JS"}, {".exe", "Executable"}, {".dll", "Lib"}
      */
     using Filter = std::unordered_map<StringType, StringType>;
+    using Duration = std::chrono::steady_clock::duration;
+    using TimePoint = std::chrono::steady_clock::time_point;
 
     struct Report {
         using ReportTable = std::unordered_map<StringType, size_t>;
@@ -29,6 +32,9 @@ namespace suspicious {
     AnalyzeDirectory(const ffinder::FileList &file_list, const SuspiciousEntryStorage &storage, const Filter &filter);
 
     std::ostream &operator<<(std::ostream &os, const suspicious::Report &report);
+
+    TimePoint GetTimePoint();
+    StringType GetFormattedTime(Duration dur);
 }
 
 #endif //SUSPICIOUSSEARCHUTIL_DIRECTORYREPORT_H
