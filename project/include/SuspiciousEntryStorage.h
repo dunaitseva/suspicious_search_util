@@ -51,10 +51,11 @@ namespace suspicious {
      */
     class StorageAccessor {
     public:
+        using SuspEntSeq = SuspiciousEntryStorage::SuspiciousEntrySequence;
         StorageAccessor() = delete;
         explicit StorageAccessor(SuspiciousEntryStorage &storage) : m_storage(storage) {}
 
-        SuspiciousEntryStorage::SuspiciousEntrySequence GetSuspiciousSequence(const SuspiciousEntryStorage::ExtensionType &extension) {
+        SuspEntSeq GetSuspiciousSequence(const SuspiciousEntryStorage::ExtensionType &extension) {
             return m_storage.Get(extension);
         }
 

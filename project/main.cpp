@@ -1,16 +1,18 @@
 #include <iostream>
 #include <exception>
+#include <sstream>
 
-#include "FileFinder.hpp"
+#include "Analyzer.h"
+#include "Match.h"
 
 int main() {
-    ffinder::exceptions::ErrorCodes ec;
-    ffinder::RRegualrFileFinder finder("../tests/FileFinderTestData", ec);
-    if (ec != ffinder::exceptions::ErrorCodes::OK) {
-        return EXIT_FAILURE;
+    ffinder::File file("../CMakeLists.txt");
+    suspicious::JsFileScanner scanner(file, {"target_link_libraries(${EXE_TARGET_NAME} PUBLIC ${LIB_NAME})"});
+    bool status = scanner.ScanFile();
+
+    if (status) {
+        std::cout << "Found" << std::endl;
     }
-    for (const auto &i: finder.CreateFilesList()) {
-        std::cout << i.absolute_path << " " << i.extension << std::endl;
-    }
+
     return EXIT_SUCCESS;
 }
