@@ -1,10 +1,10 @@
 #ifndef SUSPICIOUSSEARCHUTIL_ANALYZER_H
 #define SUSPICIOUSSEARCHUTIL_ANALYZER_H
 
-#include <fstream>
-#include <filesystem>
-#include <memory>
 #include <exception>
+#include <filesystem>
+#include <fstream>
+#include <memory>
 #include <vector>
 
 #include "FileFinder.h"
@@ -14,25 +14,19 @@ namespace suspicious {
     namespace exceptions {
         class FileScannerExceptions : public std::exception {
         public:
-            const char *what() const noexcept override {
-                return "FileScannerExceptions occur";
-            }
+            const char *what() const noexcept override { return "FileScannerExceptions occur"; }
         };
 
         class FileWrongExtension : public FileScannerExceptions {
         public:
-            const char *what() const noexcept override {
-                return "FileWrongExtension occur";
-            }
+            const char *what() const noexcept override { return "FileWrongExtension occur"; }
         };
 
         class FileAccessError : public FileScannerExceptions {
         public:
-            const char *what() const noexcept override {
-                return "FileAccessError occur";
-            }
+            const char *what() const noexcept override { return "FileAccessError occur"; }
         };
-    }
+    }  // namespace exceptions
 
     /**
      * Implements a common interface for a file scanner. The task of the file scanner
@@ -48,8 +42,8 @@ namespace suspicious {
 
         FileScanner() = delete;
 
-        FileScanner(const FileType &file, const SuspiciousEntrySequence &seq) : m_file(file), m_seq(seq),
-                                                                                m_error_indicator(false) {}
+        FileScanner(const FileType &file, const SuspiciousEntrySequence &seq)
+            : m_file(file), m_seq(seq), m_error_indicator(false) {}
 
         /**
          * Scans a file and decides if the file is suspicious or not.
@@ -131,8 +125,8 @@ namespace suspicious {
         using ScannerWkPtr = FileScanner::FileScannerWkPtr;
         using FileType = ffinder::File;
 
-        FileAnalyzer(const FileType &file, StorageAccessor &accessor) : m_file(file), m_accessor(accessor),
-                                                                        m_error_indicator(false) {}
+        FileAnalyzer(const FileType &file, StorageAccessor &accessor)
+            : m_file(file), m_accessor(accessor), m_error_indicator(false) {}
 
         /**
          * This function performs a complete analysis on the file.
@@ -206,6 +200,10 @@ namespace suspicious {
         ScannerShPtr CreateScanner() override;
     };
 
+    /**
+     * The default analyzer helps to create analyzer objects for files whose extension is
+     * not supported, that is, a special handler has not been created for these files.
+     */
     class DefaultFileAnalyzer : public FileAnalyzer {
     public:
         bool AnalyzeFile() override { return false; }
@@ -217,6 +215,6 @@ namespace suspicious {
     };
 
     FileAnalyzer::AnalyzerShPtr CreateAnalyzerByExtension(const ffinder::File &file, StorageAccessor &accessor);
-}
+}  // namespace suspicious
 
-#endif //SUSPICIOUSSEARCHUTIL_ANALYZER_H
+#endif  // SUSPICIOUSSEARCHUTIL_ANALYZER_H

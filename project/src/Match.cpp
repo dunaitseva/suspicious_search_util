@@ -1,5 +1,6 @@
-#include <iostream>
 #include "Match.h"
+
+#include <iostream>
 
 namespace suspicious::algorithm {
     /**
@@ -40,22 +41,22 @@ namespace suspicious::algorithm {
         auto eof_iter = IStreamIterator();
 
         // match_sym_counter is the counter of matched symbols.
-        for (SizeType i = 0, match_sym_counter = 0;
-             i < text_size && stream_it != eof_iter; ++i, stream_it = std::next(stream_it)) {
+        for (SizeType i = 0, match_sym_counter = 0; i < text_size && stream_it != eof_iter;
+             ++i, stream_it = std::next(stream_it)) {
             while (match_sym_counter > 0 && pattern[match_sym_counter] != *stream_it) {
-                match_sym_counter = prefix[match_sym_counter - 1]; // Next symbol don't match
+                match_sym_counter = prefix[match_sym_counter - 1];  // Next symbol don't match
             }
 
             if (pattern[match_sym_counter] == *stream_it) {
-                ++match_sym_counter; // Next symbol match
+                ++match_sym_counter;  // Next symbol match
             }
 
             if (match_sym_counter == pattern_size) {
-                return true; // Whole pattern matches
+                return true;  // Whole pattern matches
             }
         }
 
         is.setf(std::ios_base::skipws);
         return false;
     }
-}
+}  // namespace suspicious::algorithm

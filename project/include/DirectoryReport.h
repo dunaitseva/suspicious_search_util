@@ -1,9 +1,9 @@
 #ifndef SUSPICIOUSSEARCHUTIL_DIRECTORYREPORT_H
 #define SUSPICIOUSSEARCHUTIL_DIRECTORYREPORT_H
 
-#include <unordered_map>
-#include <ostream>
 #include <chrono>
+#include <ostream>
+#include <unordered_map>
 
 #include "Def.h"
 #include "FileFinder.h"
@@ -28,13 +28,13 @@ namespace suspicious {
         size_t errors;
     };
 
-    Report
-    AnalyzeDirectory(const ffinder::FileList &file_list, const SuspiciousEntryStorage &storage, const Filter &filter);
+    Report AnalyzeDirectory(const ffinder::FileList &file_list, const SuspiciousEntryStorage &storage,
+                            const Filter &filter);
 
     std::ostream &operator<<(std::ostream &os, const suspicious::Report &report);
 
     TimePoint GetTimePoint();
     StringType GetFormattedTime(Duration dur);
-}
+}  // namespace suspicious
 
-#endif //SUSPICIOUSSEARCHUTIL_DIRECTORYREPORT_H
+#endif  // SUSPICIOUSSEARCHUTIL_DIRECTORYREPORT_H

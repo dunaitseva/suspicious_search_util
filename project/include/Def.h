@@ -14,6 +14,6 @@ namespace suspicious {
     using ExtensionType = StringType;
     using SuspiciousEntryType = StringType;
     using SuspiciousEntrySequence = std::unordered_set<SuspiciousEntryType>;
-}
+}  // namespace suspicious
 
-#endif //SUSPICIOUSSEARCHUTIL_DEF_H
+#endif  // SUSPICIOUSSEARCHUTIL_DEF_H

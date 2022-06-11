@@ -1,12 +1,12 @@
 #include "Analyzer.h"
 
 #include <filesystem>
-#include <thread>
 #include <iostream>
+#include <thread>
 
-#include "Match.h"
 #include "Def.h"
 #include "FileFinder.h"
+#include "Match.h"
 
 namespace suspicious {
     using FileStreamType = std::ifstream;
@@ -14,11 +14,10 @@ namespace suspicious {
     using ThreadsPoolType = std::vector<ThreadType>;
     using StreamPoolType = std::vector<FileStreamType>;
 
-    static void
-    SearchRoutine(FileStreamType &fs, size_t seek, size_t chunk_size, const SuspiciousEntrySequence &seq,
-                  bool &decision) {
+    static void SearchRoutine(FileStreamType &fs, size_t seek, size_t chunk_size, const SuspiciousEntrySequence &seq,
+                              bool &decision) {
         // Just run KMP algorithm for all suspicious entries in seq
-        for (const auto &susp_entry: seq) {
+        for (const auto &susp_entry : seq) {
             fs.seekg(seek, std::ios_base::beg);
             if (algorithm::KMPFindMatch(fs, chunk_size + susp_entry.size(), susp_entry)) {
                 // If match was found, return from function
@@ -54,7 +53,7 @@ namespace suspicious {
 
         // Join the threads so that the decision value is valid,
         // and the thread destructors complete without errors
-        for (auto &thread: threads_pool) {
+        for (auto &thread : threads_pool) {
             thread.join();
         }
 
@@ -82,7 +81,7 @@ namespace suspicious {
 
     BatFileAnalyzer::ScannerShPtr BatFileAnalyzer::CreateScanner() {
         return std::make_unique<BatFileScanner>(m_file,
-                                               m_accessor.GetSuspiciousSequence(JsFileScanner::extension.data()));
+                                                m_accessor.GetSuspiciousSequence(JsFileScanner::extension.data()));
     }
 
     bool ExeFileAnalyzer::AnalyzeFile() {
@@ -94,7 +93,7 @@ namespace suspicious {
 
     ExeFileAnalyzer::ScannerShPtr ExeFileAnalyzer::CreateScanner() {
         return std::make_unique<ExeFileScanner>(m_file,
-                                               m_accessor.GetSuspiciousSequence(JsFileScanner::extension.data()));
+                                                m_accessor.GetSuspiciousSequence(JsFileScanner::extension.data()));
     }
 
     FileAnalyzer::AnalyzerShPtr CreateAnalyzerByExtension(const ffinder::File &file, StorageAccessor &accessor) {
@@ -113,4 +112,4 @@ namespace suspicious {
         return std::make_unique<DefaultFileAnalyzer>(file, accessor);
     }
 
-}
+}  // namespace suspicious

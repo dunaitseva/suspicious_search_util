@@ -1,10 +1,10 @@
 #ifndef SUSPICIOUSSEARCHUTIL_MATCHER_H
 #define SUSPICIOUSSEARCHUTIL_MATCHER_H
 
-#include <string>
 #include <istream>
-#include <vector>
 #include <iterator>
+#include <string>
+#include <vector>
 
 namespace suspicious::algorithm {
     using IStream = std::istream;
@@ -32,7 +32,7 @@ namespace suspicious::algorithm {
      * N - text length, M - pattern lengt.
      */
     bool KMPFindMatch(IStream &is, size_t text_size, const StringType &pattern);
-}
+}  // namespace suspicious::algorithm
 
 
-#endif //SUSPICIOUSSEARCHUTIL_MATCHER_H
+#endif  // SUSPICIOUSSEARCHUTIL_MATCHER_H

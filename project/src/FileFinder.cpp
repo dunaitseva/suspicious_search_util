@@ -12,4 +12,4 @@ namespace suspicious::ffinder::exceptions {
             return;
         }
     }
-}
+}  // namespace suspicious::ffinder::exceptions

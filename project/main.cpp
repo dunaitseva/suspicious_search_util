@@ -1,9 +1,9 @@
-#include <iostream>
 #include <fstream>
+#include <iostream>
 #include <system_error>
 
-#include "FileFinder.h"
 #include "DirectoryReport.h"
+#include "FileFinder.h"
 #include "SuspiciousEntryStorage.h"
 
 constexpr std::string_view open_report = "====== Scan result ======";
@@ -13,16 +13,13 @@ constexpr size_t EXPECTED_ARGS_AMOUNT = 2;
 constexpr size_t PATH_TO_DIRECTORY_ARG = 1;
 
 const suspicious::Filter filter = {
-        {".js",  "JS"},
-        {".cmd", "CMD"},
-        {".bat", "CMD"},
-        {".exe", "EXE"},
-        {".dll", "EXE"},
+    {".js", "JS"}, {".cmd", "CMD"}, {".bat", "CMD"}, {".exe", "EXE"}, {".dll", "EXE"},
 };
 
 void WriteUsage(std::ostream &os) {
-    static constexpr std::string_view usage = "Usage:"
-                                              "Use only one argument - path to directory.";
+    static constexpr std::string_view usage =
+        "Usage:"
+        "Use only one argument - path to directory.";
     os << usage;
 }
 

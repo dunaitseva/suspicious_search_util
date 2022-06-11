@@ -1,11 +1,10 @@
-#include <fstream>
-#include <string_view>
 #include <filesystem>
+#include <fstream>
 #include <sstream>
-
-#include "gtest/gtest.h"
+#include <string_view>
 
 #include "Match.h"
+#include "gtest/gtest.h"
 
 
 class KMPTests : public ::testing::Test {
@@ -31,13 +30,9 @@ protected:
     }
 };
 
-TEST_F(KMPTests, EmptyText) {
-    ASSERT_FALSE(suspicious::algorithm::KMPFindMatch(fs, 0, "pattern"));
-}
+TEST_F(KMPTests, EmptyText) { ASSERT_FALSE(suspicious::algorithm::KMPFindMatch(fs, 0, "pattern")); }
 
-TEST_F(KMPTests, EmptyPattern) {
-    ASSERT_FALSE(suspicious::algorithm::KMPFindMatch(fs, 123, ""));
-}
+TEST_F(KMPTests, EmptyPattern) { ASSERT_FALSE(suspicious::algorithm::KMPFindMatch(fs, 123, "")); }
 
 TEST_F(KMPTests, PatternValidWithWhiteSpaces) {
     ASSERT_TRUE(fs.is_open());
@@ -56,10 +51,12 @@ TEST_F(KMPTests, PatternInvalid) {
 
 TEST_F(KMPTests, PatternValidBegEntry) {
     ASSERT_TRUE(fs.is_open());
-    ASSERT_TRUE(suspicious::algorithm::KMPFindMatch(ss_beg_entry, text_with_beg_entry.size(), std::string(pattern_valid)));
+    ASSERT_TRUE(
+        suspicious::algorithm::KMPFindMatch(ss_beg_entry, text_with_beg_entry.size(), std::string(pattern_valid)));
 }
 
 TEST_F(KMPTests, PatternValidEndEntry) {
     ASSERT_TRUE(fs.is_open());
-    ASSERT_TRUE(suspicious::algorithm::KMPFindMatch(ss_end_entry, text_with_end_entry.size(), std::string(pattern_valid)));
+    ASSERT_TRUE(
+        suspicious::algorithm::KMPFindMatch(ss_end_entry, text_with_end_entry.size(), std::string(pattern_valid)));
 }

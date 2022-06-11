@@ -1,37 +1,31 @@
 #ifndef SUSPICIOUSSEARCHENGINE_FILEFINDER_H
 #define SUSPICIOUSSEARCHENGINE_FILEFINDER_H
 
+#include <Def.h>
+
+#include <exception>
 #include <filesystem>
+#include <list>
 #include <string>
 #include <string_view>
-#include <list>
-#include <exception>
 #include <system_error>
-
-#include <Def.h>
 
 namespace suspicious::ffinder {
     namespace fs = std::filesystem;
     namespace exceptions {
         class FinderException : std::exception {
         public:
-            const char *what() const noexcept override {
-                return "Finder exception occur";
-            }
+            const char *what() const noexcept override { return "Finder exception occur"; }
         };
 
         class DirectoryNotFound : FinderException {
         public:
-            const char *what() const noexcept override {
-                return "Specified directory not found";
-            }
+            const char *what() const noexcept override { return "Specified directory not found"; }
         };
 
         class NotDirectory : FinderException {
         public:
-            const char *what() const noexcept override {
-                return "Specified filesystem object is not a directory";
-            }
+            const char *what() const noexcept override { return "Specified filesystem object is not a directory"; }
         };
 
         // The same codes as exception classes
@@ -42,7 +36,7 @@ namespace suspicious::ffinder {
         };
 
         void LogError(std::ostream &os, const ErrorCodes &ec);
-    }
+    }  // namespace exceptions
 
     /**
      * File is just convenient file abstraction, that works as wrapper on std::filesystem::path.
@@ -51,9 +45,12 @@ namespace suspicious::ffinder {
     struct File {
         File() = default;
 
-        explicit File(const PathType &file_path) : path(file_path), name(path.filename()), extension(path.extension()),
-                                                   absolute_path(fs::absolute(file_path)),
-                                                   file_size(fs::file_size(absolute_path)) {}
+        explicit File(const PathType &file_path)
+            : path(file_path),
+              name(path.filename()),
+              extension(path.extension()),
+              absolute_path(fs::absolute(file_path)),
+              file_size(fs::file_size(absolute_path)) {}
 
         PathType path;
         PathType name;
@@ -74,7 +71,7 @@ namespace suspicious::ffinder {
      * @note In fact, Iter should be std::filesystem::directory_iterator or
      * std::filesystem::recursive::directory_iterator.
      */
-    template<typename Iter>
+    template <typename Iter>
     class BasicFilesFinder {
     public:
         using IteratorType = Iter;
@@ -98,7 +95,7 @@ namespace suspicious::ffinder {
         PathType m_dir_name;
     };
 
-    template<typename Iter>
+    template <typename Iter>
     BasicFilesFinder<Iter>::BasicFilesFinder(const PathType &dir_name) : m_dir_name(dir_name) {
         if (!fs::exists(m_dir_name)) {
             throw exceptions::DirectoryNotFound();
@@ -109,9 +106,9 @@ namespace suspicious::ffinder {
         }
     }
 
-    template<typename Iter>
+    template <typename Iter>
     BasicFilesFinder<Iter>::BasicFilesFinder(const PathType &dir_name, exceptions::ErrorCodes &err_code) noexcept
-            : m_dir_name(dir_name) {
+        : m_dir_name(dir_name) {
         std::error_code ec;
         if (!fs::exists(m_dir_name, ec)) {
             err_code = exceptions::ErrorCodes::NotExist;
@@ -130,7 +127,7 @@ namespace suspicious::ffinder {
     /**
      * In fact is BasicFilesFinder for searching only regular files.
      */
-    template<typename Iter>
+    template <typename Iter>
     class RegularBasicFileFinder : public BasicFilesFinder<Iter> {
     public:
         using IteratorType = Iter;
@@ -141,20 +138,19 @@ namespace suspicious::ffinder {
         explicit RegularBasicFileFinder(const PathType &dir_name) : BasicFilesFinder<Iter>(dir_name) {}
 
         explicit RegularBasicFileFinder(const PathType &dir_name, exceptions::ErrorCodes &ec)
-                : BasicFilesFinder<Iter>(dir_name, ec) {}
+            : BasicFilesFinder<Iter>(dir_name, ec) {}
 
         FileList CreateFilesList() const override;
 
     private:
-
         bool IsRegular(const PathType &file) const { return std::filesystem::is_regular_file(file); }
     };
 
-    template<typename Iter>
+    template <typename Iter>
     FileList RegularBasicFileFinder<Iter>::CreateFilesList() const {
         FileList regular_files_list;
         // Iterate over directory and find all regular files.
-        for (const auto &path_entry: IteratorType{BasicFilesFinder<Iter>::m_dir_name}) {
+        for (const auto &path_entry : IteratorType{BasicFilesFinder<Iter>::m_dir_name}) {
             if (IsRegular(path_entry)) {
                 regular_files_list.emplace_back(path_entry);
             }
@@ -164,6 +160,6 @@ namespace suspicious::ffinder {
 
     using RegualarFileFinder = RegularBasicFileFinder<fs::directory_iterator>;
     using RRegualarFileFinder = RegularBasicFileFinder<fs::recursive_directory_iterator>;
-}
+}  // namespace suspicious::ffinder
 
-#endif // SUSPICIOUSSEARCHENGINE_FILEFINDER_H
+#endif  // SUSPICIOUSSEARCHENGINE_FILEFINDER_H

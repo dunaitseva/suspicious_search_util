@@ -1,7 +1,6 @@
-#include "gtest/gtest.h"
-
 #include "Def.h"
 #include "SuspiciousEntryStorage.h"
+#include "gtest/gtest.h"
 
 class LightStorageGetAddTests : public ::testing::Test {
 protected:

@@ -2,8 +2,8 @@
 #define SUSPICIOUSSEARCHUTIL_SUSPICIOUSENTRYSTORAGE_H
 
 #include <string>
-#include <unordered_set>
 #include <unordered_map>
+#include <unordered_set>
 
 #include "Def.h"
 
@@ -15,7 +15,6 @@ namespace suspicious {
      */
     class SuspiciousEntryStorage {
     public:
-
         static constexpr size_t MIN_EXTENSION_SIZE = 2;
         static constexpr char EXTENSION_DELIMITER = '.';
 
@@ -37,6 +36,7 @@ namespace suspicious {
 
         void Add(const ExtensionType &extension, const SuspiciousEntryType &suspicious_entry) override;
         virtual SuspiciousEntrySequence Get(const ExtensionType &extension) const override;
+
     private:
         HashtableType m_hash_table;
     };
@@ -57,7 +57,7 @@ namespace suspicious {
     private:
         const SuspiciousEntryStorage &m_storage;
     };
-}
+}  // namespace suspicious
 
 
-#endif //SUSPICIOUSSEARCHUTIL_SUSPICIOUSENTRYSTORAGE_H
+#endif  // SUSPICIOUSSEARCHUTIL_SUSPICIOUSENTRYSTORAGE_H

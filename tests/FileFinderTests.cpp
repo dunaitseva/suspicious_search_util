@@ -1,9 +1,8 @@
-#include <string_view>
 #include <string>
-
-#include "gtest/gtest.h"
+#include <string_view>
 
 #include "FileFinder.h"
+#include "gtest/gtest.h"
 
 constexpr std::string_view TEST_DIRECTORY = "../tests/FileFinderTestData";
 constexpr size_t FILES_AMOUNT = 2;

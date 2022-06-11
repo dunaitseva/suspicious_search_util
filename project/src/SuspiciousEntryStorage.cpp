@@ -2,8 +2,7 @@
 
 namespace suspicious {
     void LightSuspiciousStorage::Add(const ExtensionType &extension, const SuspiciousEntryType &suspicious_entry) {
-        if (extension.size() >= MIN_EXTENSION_SIZE &&
-            extension[0] == EXTENSION_DELIMITER &&
+        if (extension.size() >= MIN_EXTENSION_SIZE && extension[0] == EXTENSION_DELIMITER &&
             extension[1] != EXTENSION_DELIMITER) {
             m_hash_table[extension].insert(suspicious_entry);
         }
@@ -15,4 +14,4 @@ namespace suspicious {
         }
         return m_hash_table.at(extension);
     }
-}
+}  // namespace suspicious
