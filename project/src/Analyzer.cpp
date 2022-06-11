@@ -5,16 +5,18 @@
 #include <iostream>
 
 #include "Match.h"
+#include "Def.h"
+#include "FileFinder.h"
 
 namespace suspicious {
-    using SuspEntrySeq = suspicious::SuspiciousEntryStorage::SuspiciousEntrySequence;
     using FileStreamType = std::ifstream;
     using ThreadType = std::jthread;
     using ThreadsPoolType = std::vector<ThreadType>;
     using StreamPoolType = std::vector<FileStreamType>;
 
     static void
-    SearchRoutine(FileStreamType &fs, size_t seek, size_t chunk_size, const SuspEntrySeq &seq, bool &decision) {
+    SearchRoutine(FileStreamType &fs, size_t seek, size_t chunk_size, const SuspiciousEntrySequence &seq,
+                  bool &decision) {
         // Just run KMP algorithm for all suspicious entries in seq
         for (const auto &susp_entry: seq) {
             fs.seekg(seek, std::ios_base::beg);
@@ -32,7 +34,7 @@ namespace suspicious {
         StreamPoolType stream_pool{max_threads};
         ThreadsPoolType threads_pool{max_threads};
 
-        size_t chunk_size = std::filesystem::file_size(m_file.absolute_path) / max_threads;
+        size_t chunk_size = m_file.file_size / max_threads;
         bool decision = false;
         for (size_t i = 0; i < max_threads; ++i) {
             // Open file for every thread
@@ -58,4 +60,57 @@ namespace suspicious {
 
         return decision;
     }
+
+    bool JsFileAnalyzer::AnalyzeFile() {
+        JsFileAnalyzer::ScannerShPtr scanner = CreateScanner();
+        bool verdict = scanner->ScanFile();
+        m_error_indicator = scanner->IsError();
+        return verdict;
+    }
+
+    JsFileAnalyzer::ScannerShPtr JsFileAnalyzer::CreateScanner() {
+        return std::make_unique<JsFileScanner>(m_file,
+                                               m_accessor.GetSuspiciousSequence(JsFileScanner::extension.data()));
+    }
+
+    bool BatFileAnalyzer::AnalyzeFile() {
+        JsFileAnalyzer::ScannerShPtr scanner = CreateScanner();
+        bool verdict = scanner->ScanFile();
+        m_error_indicator = scanner->IsError();
+        return verdict;
+    }
+
+    BatFileAnalyzer::ScannerShPtr BatFileAnalyzer::CreateScanner() {
+        return std::make_unique<BatFileScanner>(m_file,
+                                               m_accessor.GetSuspiciousSequence(JsFileScanner::extension.data()));
+    }
+
+    bool ExeFileAnalyzer::AnalyzeFile() {
+        ExeFileAnalyzer::ScannerShPtr scanner = CreateScanner();
+        bool verdict = scanner->ScanFile();
+        m_error_indicator = scanner->IsError();
+        return verdict;
+    }
+
+    ExeFileAnalyzer::ScannerShPtr ExeFileAnalyzer::CreateScanner() {
+        return std::make_unique<ExeFileScanner>(m_file,
+                                               m_accessor.GetSuspiciousSequence(JsFileScanner::extension.data()));
+    }
+
+    FileAnalyzer::AnalyzerShPtr CreateAnalyzerByExtension(const ffinder::File &file, StorageAccessor &accessor) {
+        if (file.extension == JsFileAnalyzer::extension) {
+            return std::make_unique<JsFileAnalyzer>(file, accessor);
+        }
+
+        if (file.extension == BatFileAnalyzer::extension_bat || file.extension == BatFileAnalyzer::extension_cmd) {
+            return std::make_unique<BatFileAnalyzer>(file, accessor);
+        }
+
+        if (file.extension == ExeFileAnalyzer::extension_dll || file.extension == ExeFileAnalyzer::extension_exe) {
+            return std::make_unique<ExeFileAnalyzer>(file, accessor);
+        }
+
+        return {};
+    }
+
 }

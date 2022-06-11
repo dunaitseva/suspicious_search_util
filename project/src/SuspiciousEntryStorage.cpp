@@ -9,7 +9,7 @@ namespace suspicious {
         }
     }
 
-    SuspiciousEntryStorage::SuspiciousEntrySequence LightSuspiciousStorage::Get(const ExtensionType &extension) const {
+    SuspiciousEntrySequence LightSuspiciousStorage::Get(const ExtensionType &extension) const {
         if (m_hash_table.count(extension) == 0) {
             return {};
         }

@@ -1,5 +1,5 @@
-#ifndef SUSPICIOUSSEARCHENGINE_DIRECTORYOBERVER_H
-#define SUSPICIOUSSEARCHENGINE_DIRECTORYOBERVER_H
+#ifndef SUSPICIOUSSEARCHENGINE_FILEFINDER_H
+#define SUSPICIOUSSEARCHENGINE_FILEFINDER_H
 
 #include <filesystem>
 #include <string>
@@ -8,9 +8,10 @@
 #include <exception>
 #include <system_error>
 
-namespace ffinder {
-    namespace fs = std::filesystem;
+#include <Def.h>
 
+namespace suspicious::ffinder {
+    namespace fs = std::filesystem;
     namespace exceptions {
         class FinderException : std::exception {
         public:
@@ -39,6 +40,8 @@ namespace ffinder {
             NotDir,
             NotExist,
         };
+
+        void LogError(std::ostream &os, const ErrorCodes &ec);
     }
 
     /**
@@ -46,21 +49,20 @@ namespace ffinder {
      * It provides possibility simply access file extension in case of this program task.
      */
     struct File {
-        using PathType = fs::path;
-
         File() = default;
 
-        explicit File(const PathType &file_path) : path(file_path), absolute_path(fs::absolute(file_path)),
-                                                   name(path.filename()), extension(path.extension()) {}
+        explicit File(const PathType &file_path) : path(file_path), name(path.filename()), extension(path.extension()),
+                                                   absolute_path(fs::absolute(file_path)),
+                                                   file_size(fs::file_size(absolute_path)) {}
 
         PathType path;
-        PathType absolute_path;
         PathType name;
         PathType extension;
+        PathType absolute_path;
+        size_t file_size;
     };
 
     using FileType = File;
-    using PathType = FileType::PathType;
     using FileList = std::list<FileType>;
 
     /**
@@ -78,7 +80,6 @@ namespace ffinder {
         using IteratorType = Iter;
 
         BasicFilesFinder() = default;
-
 
         explicit BasicFilesFinder(const PathType &dir_name);
 
@@ -161,10 +162,8 @@ namespace ffinder {
         return regular_files_list;
     }
 
-    using RegualrFileFinder = RegularBasicFileFinder<fs::directory_iterator>;
-    using RRegualrFileFinder = RegularBasicFileFinder<fs::recursive_directory_iterator>;
-
+    using RegualarFileFinder = RegularBasicFileFinder<fs::directory_iterator>;
+    using RRegualarFileFinder = RegularBasicFileFinder<fs::recursive_directory_iterator>;
 }
 
-
-#endif // SUSPICIOUSSEARCHENGINE_DIRECTORYOBERVER_H
+#endif // SUSPICIOUSSEARCHENGINE_FILEFINDER_H

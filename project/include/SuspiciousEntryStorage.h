@@ -5,6 +5,8 @@
 #include <unordered_set>
 #include <unordered_map>
 
+#include "Def.h"
+
 namespace suspicious {
     /**
      * This class provides an interface to other classes, with the help of which
@@ -13,10 +15,6 @@ namespace suspicious {
      */
     class SuspiciousEntryStorage {
     public:
-        using StringType = std::string;
-        using ExtensionType = StringType;
-        using SuspiciousEntryType = StringType;
-        using SuspiciousEntrySequence = std::unordered_set<SuspiciousEntryType>;
 
         static constexpr size_t MIN_EXTENSION_SIZE = 2;
         static constexpr char EXTENSION_DELIMITER = '.';
@@ -35,9 +33,7 @@ namespace suspicious {
      */
     class LightSuspiciousStorage : public SuspiciousEntryStorage {
     public:
-        using HashtableType = std::unordered_map<ExtensionType, SuspiciousEntrySequence>;
-
-        LightSuspiciousStorage() = default;
+        using HashtableType = std::unordered_map<ExtensionType, SuspiciousEntrySequence, std::hash<ExtensionType>>;
 
         void Add(const ExtensionType &extension, const SuspiciousEntryType &suspicious_entry) override;
         virtual SuspiciousEntrySequence Get(const ExtensionType &extension) const override;
@@ -51,16 +47,15 @@ namespace suspicious {
      */
     class StorageAccessor {
     public:
-        using SuspEntSeq = SuspiciousEntryStorage::SuspiciousEntrySequence;
         StorageAccessor() = delete;
-        explicit StorageAccessor(SuspiciousEntryStorage &storage) : m_storage(storage) {}
+        explicit StorageAccessor(const SuspiciousEntryStorage &storage) : m_storage(storage) {}
 
-        SuspEntSeq GetSuspiciousSequence(const SuspiciousEntryStorage::ExtensionType &extension) {
+        SuspiciousEntrySequence GetSuspiciousSequence(const ExtensionType &extension) {
             return m_storage.Get(extension);
         }
 
     private:
-        SuspiciousEntryStorage &m_storage;
+        const SuspiciousEntryStorage &m_storage;
     };
 }
 
