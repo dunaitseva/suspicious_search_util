@@ -6,6 +6,7 @@
 #include "Match.h"
 #include "gtest/gtest.h"
 
+#define _ITERATOR_DEBUG_LEVEL 2
 
 class KMPTests : public ::testing::Test {
 protected:

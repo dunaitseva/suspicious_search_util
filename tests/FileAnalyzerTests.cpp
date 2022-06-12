@@ -6,6 +6,8 @@
 #include "SuspiciousEntryStorage.h"
 #include "gtest/gtest.h"
 
+#define _ITERATOR_DEBUG_LEVEL 2
+
 class ExtensionAnalyzerTests : public ::testing::Test {
 protected:
     static constexpr std::string_view valid_file_js = "../tests/FileScannerTestData/valid.js";

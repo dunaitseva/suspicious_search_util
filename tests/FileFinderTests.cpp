@@ -4,6 +4,8 @@
 #include "FileFinder.h"
 #include "gtest/gtest.h"
 
+#define _ITERATOR_DEBUG_LEVEL 2
+
 constexpr std::string_view TEST_DIRECTORY = "../tests/FileFinderTestData";
 constexpr size_t FILES_AMOUNT = 2;
 constexpr size_t RECURSIVE_FILES_AMOUNT = 3;

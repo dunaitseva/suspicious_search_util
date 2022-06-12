@@ -7,6 +7,8 @@
 #include "FileFinder.h"
 #include "gtest/gtest.h"
 
+#define _ITERATOR_DEBUG_LEVEL 2
+
 class ScannerBehaviorTests : public ::testing::Test {
 protected:
     static constexpr std::string_view valid_file = "../tests/FileScannerTestData/valid.txt";
