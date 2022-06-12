@@ -11,10 +11,10 @@ clang-format -i --style=file:%format_file_path% %project_dir%\*.cpp
 echo "Formatted %project_dir%"
 
 clang-format -i --style=file:%format_file_path% %src_dir%\*.cpp
-echo "Formatted %project_dir%"
+echo "Formatted %src_dir%"
 
 clang-format -i --style=file:%format_file_path% %include_dir%\*.h
-echo "Formatted %project_dir%"
+echo "Formatted %include_dir%"
 
 clang-format -i --style=file:%format_file_path% %tests_dir%\*.cpp
-echo "Formatted %project_dir%"
+echo "Formatted %tests_dir%"

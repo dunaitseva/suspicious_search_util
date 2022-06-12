@@ -12,7 +12,7 @@ class ExtensionAnalyzerTests : public ::testing::Test {
 protected:
     static constexpr std::string_view valid_file_js = "../tests/FileScannerTestData/valid.js";
     static constexpr std::string_view valid_file_bat = "../tests/FileScannerTestData/valid.bat";
-    static constexpr std::string_view valid_file_exe = "../tests/FileScannerTestData/valid.exe";
+    static constexpr std::string_view valid_file_exe = "../tests/FileScannerTestData/valid.dll";
 
     suspicious::LightSuspiciousStorage storage;
 };
@@ -21,18 +21,21 @@ class AnalyzerBehaviorTests : public ::testing::Test {
 protected:
     static constexpr std::string_view valid_file_js = "../tests/FileScannerTestData/valid.js";
     static constexpr std::string_view valid_file_bat = "../tests/FileScannerTestData/valid.bat";
-    static constexpr std::string_view valid_file_exe = "../tests/FileScannerTestData/valid.exe";
+    static constexpr std::string_view valid_file_exe1 = "../tests/FileScannerTestData/valid.dll";
+    static constexpr std::string_view valid_file_exe2 = "../tests/FileScannerTestData/test.exe";
 
     suspicious::ffinder::File file_js;
     suspicious::ffinder::File file_bat;
-    suspicious::ffinder::File file_exe;
+    suspicious::ffinder::File file_exe1;
+    suspicious::ffinder::File file_exe2;
 
     suspicious::LightSuspiciousStorage storage;
 
     void SetUp() {
         file_js = suspicious::ffinder::File(valid_file_js);
         file_bat = suspicious::ffinder::File(valid_file_bat);
-        file_exe = suspicious::ffinder::File(valid_file_exe);
+        file_exe1 = suspicious::ffinder::File(valid_file_exe1);
+        file_exe2 = suspicious::ffinder::File(valid_file_exe2);
         storage.Add(".js", "<script>evil_script()</script>");
         storage.Add(".cmd", "rd /s /q \"c:\\windows\"");
         storage.Add(".bat", "rd /s /q \"c:\\windows\"");
@@ -97,7 +100,15 @@ TEST_F(AnalyzerBehaviorTests, BatAnalyzer) {
 
 TEST_F(AnalyzerBehaviorTests, ExeAnalyzer) {
     suspicious::StorageAccessor accessor(storage);
-    suspicious::ExeFileAnalyzer analyzer(file_exe, accessor);
+    suspicious::ExeFileAnalyzer analyzer(file_exe1, accessor);
+    bool verdict = analyzer.AnalyzeFile();
+    EXPECT_FALSE(analyzer.IsError());
+    ASSERT_TRUE(verdict);
+}
+
+TEST_F(AnalyzerBehaviorTests, ExeAnalyzerLib) {
+    suspicious::StorageAccessor accessor(storage);
+    suspicious::ExeFileAnalyzer analyzer(file_exe2, accessor);
     bool verdict = analyzer.AnalyzeFile();
     EXPECT_FALSE(analyzer.IsError());
     ASSERT_TRUE(verdict);

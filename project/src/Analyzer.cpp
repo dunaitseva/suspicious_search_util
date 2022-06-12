@@ -80,8 +80,9 @@ namespace suspicious {
     }
 
     BatFileAnalyzer::ScannerShPtr BatFileAnalyzer::CreateScanner() {
-        return std::make_unique<BatFileScanner>(m_file,
-                                                m_accessor.GetSuspiciousSequence(JsFileScanner::extension.data()));
+        SuspiciousEntrySequence result_seq = m_accessor.GetSuspiciousSequence(BatFileScanner::extension_bat.data());
+        result_seq.merge(m_accessor.GetSuspiciousSequence(BatFileScanner::extension_cmd.data()));
+        return std::make_unique<BatFileScanner>(m_file, result_seq);
     }
 
     bool ExeFileAnalyzer::AnalyzeFile() {
@@ -92,8 +93,9 @@ namespace suspicious {
     }
 
     ExeFileAnalyzer::ScannerShPtr ExeFileAnalyzer::CreateScanner() {
-        return std::make_unique<ExeFileScanner>(m_file,
-                                                m_accessor.GetSuspiciousSequence(JsFileScanner::extension.data()));
+        SuspiciousEntrySequence result_seq = m_accessor.GetSuspiciousSequence(ExeFileScanner::extension_exe.data());
+        result_seq.merge(m_accessor.GetSuspiciousSequence(ExeFileScanner::extension_dll.data()));
+        return std::make_unique<ExeFileScanner>(m_file, result_seq);
     }
 
     FileAnalyzer::AnalyzerShPtr CreateAnalyzerByExtension(const ffinder::File &file, StorageAccessor &accessor) {

@@ -1,7 +1,6 @@
 #include "DirectoryReport.h"
 
 #include <algorithm>
-#include <iostream>
 #include <sstream>
 
 #include "Analyzer.h"
@@ -26,7 +25,6 @@ namespace suspicious {
                 ++result_report.processed_files;
                 auto analyzer = CreateAnalyzerByExtension(file, accessor);
                 bool verdict = analyzer->AnalyzeFile();
-                std::cout << file.name << " " << verdict << std::endl;
                 if (analyzer->IsError())
                     ++result_report.errors;
                 else

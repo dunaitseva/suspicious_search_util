@@ -18,7 +18,8 @@ class ExtensionAnalyzerTests : public ::testing::Test {
 protected:
     static constexpr std::string_view valid_file_js = "../tests/FileScannerTestData/valid.js";
     static constexpr std::string_view valid_file_bat = "../tests/FileScannerTestData/valid.bat";
-    static constexpr std::string_view valid_file_exe = "../tests/FileScannerTestData/valid.dll";
+    static constexpr std::string_view valid_file_exe1 = "../tests/FileScannerTestData/valid.dll";
+    static constexpr std::string_view valid_file_exe2 = "../tests/FileScannerTestData/test.exe";
 };
 
 TEST_F(ScannerBehaviorTests, ValidFile) {
@@ -63,7 +64,7 @@ TEST_F(ExtensionAnalyzerTests, BatOpenInvalid) {
 }
 
 TEST_F(ExtensionAnalyzerTests, ExeOpenValid) {
-    suspicious::ffinder::File file(valid_file_exe);
+    suspicious::ffinder::File file(valid_file_exe1);
     suspicious::SuspiciousEntrySequence seq{};
     ASSERT_NO_THROW(suspicious::ExeFileScanner(file, seq));
 }
@@ -72,4 +73,13 @@ TEST_F(ExtensionAnalyzerTests, ExeOpenInvalid) {
     suspicious::ffinder::File file(valid_file_js);
     suspicious::SuspiciousEntrySequence seq{};
     ASSERT_THROW(suspicious::ExeFileScanner(file, seq), suspicious::exceptions::FileWrongExtension);
+}
+
+TEST_F(ExtensionAnalyzerTests, ExeScanner) {
+    suspicious::ffinder::File file(valid_file_exe2);
+    suspicious::SuspiciousEntrySequence seq{"CreateRemoteThread"};
+    suspicious::ExeFileScanner scanner(file, seq);
+    bool verdict = scanner.ScanFile();
+    ASSERT_FALSE(scanner.IsError());
+    ASSERT_TRUE(verdict);
 }

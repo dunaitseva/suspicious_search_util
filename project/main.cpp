@@ -12,10 +12,6 @@ constexpr std::string_view close_report = "=========================";
 constexpr size_t EXPECTED_ARGS_AMOUNT = 2;
 constexpr size_t PATH_TO_DIRECTORY_ARG = 1;
 
-const suspicious::Filter filter = {
-    {".js", "JS"}, {".cmd", "CMD"}, {".bat", "CMD"}, {".exe", "EXE"}, {".dll", "EXE"},
-};
-
 void WriteUsage(std::ostream &os) {
     static constexpr std::string_view usage =
         "Usage:"
@@ -50,6 +46,12 @@ int main(int argc, char *argv[]) {
         suspicious::ffinder::exceptions::LogError(std::cerr, ec);
         return EXIT_FAILURE;
     }
+
+    // A constant filter is used, since in the context of this task it is not necessary to
+    // change the types of files that the program should analyze
+    const suspicious::Filter filter = {
+        {".js", "JS"}, {".cmd", "CMD"}, {".bat", "CMD"}, {".exe", "EXE"}, {".dll", "EXE"},
+    };
 
     auto start = suspicious::GetTimePoint();
     suspicious::ffinder::FileList files_list = finder.CreateFilesList();
