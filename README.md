@@ -1,4 +1,4 @@
-# Suspicious finder util
+# `suspicious search util`
 
 ## Описание реализованой программы
 
