@@ -2,8 +2,6 @@
 #include "SuspiciousEntryStorage.h"
 #include "gtest/gtest.h"
 
-#define _ITERATOR_DEBUG_LEVEL 2
-
 class LightStorageGetAddTests : public ::testing::Test {
  protected:
     suspicious::ExtensionType valid_extension = ".js";
