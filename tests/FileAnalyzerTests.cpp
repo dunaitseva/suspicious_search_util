@@ -9,7 +9,7 @@
 #define _ITERATOR_DEBUG_LEVEL 2
 
 class ExtensionAnalyzerTests : public ::testing::Test {
-protected:
+ protected:
     static constexpr std::string_view valid_file_js = "../tests/FileScannerTestData/valid.js";
     static constexpr std::string_view valid_file_bat = "../tests/FileScannerTestData/valid.bat";
     static constexpr std::string_view valid_file_exe = "../tests/FileScannerTestData/valid.dll";
@@ -18,7 +18,7 @@ protected:
 };
 
 class AnalyzerBehaviorTests : public ::testing::Test {
-protected:
+ protected:
     static constexpr std::string_view valid_file_js = "../tests/FileScannerTestData/valid.js";
     static constexpr std::string_view valid_file_bat = "../tests/FileScannerTestData/valid.bat";
     static constexpr std::string_view valid_file_exe1 = "../tests/FileScannerTestData/valid.dll";

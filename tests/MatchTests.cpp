@@ -9,7 +9,7 @@
 #define _ITERATOR_DEBUG_LEVEL 2
 
 class KMPTests : public ::testing::Test {
-protected:
+ protected:
     static constexpr std::string_view file_name = "../tests/KMPTestData/big.txt";
     size_t file_size = std::filesystem::file_size(file_name);
     // Strigng 964

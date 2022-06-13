@@ -1,5 +1,5 @@
-#ifndef SUSPICIOUSSEARCHUTIL_MATCHER_H
-#define SUSPICIOUSSEARCHUTIL_MATCHER_H
+#ifndef PROJECT_INCLUDE_MATCH_H_
+#define PROJECT_INCLUDE_MATCH_H_
 
 #include <istream>
 #include <iterator>
@@ -35,4 +35,4 @@ namespace suspicious::algorithm {
 }  // namespace suspicious::algorithm
 
 
-#endif  // SUSPICIOUSSEARCHUTIL_MATCHER_H
+#endif  // PROJECT_INCLUDE_MATCH_H_

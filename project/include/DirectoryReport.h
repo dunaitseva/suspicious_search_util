@@ -1,5 +1,5 @@
-#ifndef SUSPICIOUSSEARCHUTIL_DIRECTORYREPORT_H
-#define SUSPICIOUSSEARCHUTIL_DIRECTORYREPORT_H
+#ifndef PROJECT_INCLUDE_DIRECTORYREPORT_H_
+#define PROJECT_INCLUDE_DIRECTORYREPORT_H_
 
 #include <chrono>
 #include <ostream>
@@ -37,4 +37,4 @@ namespace suspicious {
     StringType GetFormattedTime(Duration dur);
 }  // namespace suspicious
 
-#endif  // SUSPICIOUSSEARCHUTIL_DIRECTORYREPORT_H
+#endif  // PROJECT_INCLUDE_DIRECTORYREPORT_H_

@@ -1,5 +1,5 @@
-#ifndef SUSPICIOUSSEARCHUTIL_ANALYZER_H
-#define SUSPICIOUSSEARCHUTIL_ANALYZER_H
+#ifndef PROJECT_INCLUDE_ANALYZER_H_
+#define PROJECT_INCLUDE_ANALYZER_H_
 
 #include <exception>
 #include <filesystem>
@@ -13,17 +13,17 @@
 namespace suspicious {
     namespace exceptions {
         class FileScannerExceptions : public std::exception {
-        public:
+         public:
             const char *what() const noexcept override { return "FileScannerExceptions occur"; }
         };
 
         class FileWrongExtension : public FileScannerExceptions {
-        public:
+         public:
             const char *what() const noexcept override { return "FileWrongExtension occur"; }
         };
 
         class FileAccessError : public FileScannerExceptions {
-        public:
+         public:
             const char *what() const noexcept override { return "FileAccessError occur"; }
         };
     }  // namespace exceptions
@@ -35,7 +35,7 @@ namespace suspicious {
      * whether the contents of a file are suspicious.
      */
     class FileScanner {
-    public:
+     public:
         using FileType = ffinder::FileType;
         using FileScannerShPtr = std::shared_ptr<FileScanner>;
         using FileScannerWkPtr = std::weak_ptr<FileScanner>;
@@ -53,13 +53,13 @@ namespace suspicious {
          * @note Deciding that a file is suspicious generally depends on the file type, so the
          * ScanFile implementation depends on the file type. By default ScanFile wrap SearchSuspiciousEntries.
          */
-        virtual bool ScanFile() { return SearchSuspiciousEntries(); };
+        virtual bool ScanFile() { return SearchSuspiciousEntries(); }
 
         virtual ~FileScanner() = default;
 
         bool IsError() const { return m_error_indicator; }
 
-    protected:
+     protected:
         /**
          * The implementation of the algorithm for searching for suspicious lines in a file is in this
          * function. Since, in general, it is rather suboptimal to load a file into memory, since it
@@ -77,7 +77,7 @@ namespace suspicious {
     };
 
     class JsFileScanner final : public FileScanner {
-    public:
+     public:
         static constexpr std::string_view extension = ".js";
 
         JsFileScanner(const FileType &file, const SuspiciousEntrySequence &seq) : FileScanner(file, seq) {
@@ -88,7 +88,7 @@ namespace suspicious {
     };
 
     class BatFileScanner final : public FileScanner {
-    public:
+     public:
         static constexpr std::string_view extension_bat = ".bat";
         static constexpr std::string_view extension_cmd = ".cmd";
 
@@ -100,7 +100,7 @@ namespace suspicious {
     };
 
     class ExeFileScanner final : public FileScanner {
-    public:
+     public:
         static constexpr std::string_view extension_exe = ".exe";
         static constexpr std::string_view extension_dll = ".dll";
 
@@ -118,7 +118,7 @@ namespace suspicious {
      * to the FileScanner class.
      */
     class FileAnalyzer {
-    public:
+     public:
         using AnalyzerShPtr = std::shared_ptr<FileAnalyzer>;
         using AnalyzerWkPtr = std::weak_ptr<FileAnalyzer>;
         using ScannerShPtr = FileScanner::FileScannerShPtr;
@@ -138,7 +138,7 @@ namespace suspicious {
 
         virtual ~FileAnalyzer() = default;
 
-    protected:
+     protected:
         /**
          * Creates file scanned class, specific for instance of analyzer.
          * @return shared pointer to scanner.
@@ -151,7 +151,7 @@ namespace suspicious {
     };
 
     class JsFileAnalyzer : public FileAnalyzer {
-    public:
+     public:
         static constexpr std::string_view extension = ".js";
 
         JsFileAnalyzer(const FileType &file, StorageAccessor &accessor) : FileAnalyzer(file, accessor) {
@@ -162,12 +162,12 @@ namespace suspicious {
 
         bool AnalyzeFile() override;
 
-    protected:
+     protected:
         ScannerShPtr CreateScanner() override;
     };
 
     class BatFileAnalyzer : public FileAnalyzer {
-    public:
+     public:
         static constexpr std::string_view extension_bat = ".bat";
         static constexpr std::string_view extension_cmd = ".cmd";
 
@@ -179,12 +179,12 @@ namespace suspicious {
 
         bool AnalyzeFile() override;
 
-    protected:
+     protected:
         ScannerShPtr CreateScanner() override;
     };
 
     class ExeFileAnalyzer : public FileAnalyzer {
-    public:
+     public:
         static constexpr std::string_view extension_exe = ".exe";
         static constexpr std::string_view extension_dll = ".dll";
 
@@ -196,7 +196,7 @@ namespace suspicious {
 
         bool AnalyzeFile() override;
 
-    protected:
+     protected:
         ScannerShPtr CreateScanner() override;
     };
 
@@ -205,16 +205,16 @@ namespace suspicious {
      * not supported, that is, a special handler has not been created for these files.
      */
     class DefaultFileAnalyzer : public FileAnalyzer {
-    public:
+     public:
         bool AnalyzeFile() override { return false; }
 
         DefaultFileAnalyzer(const FileType &file, StorageAccessor &accessor) : FileAnalyzer(file, accessor) {}
 
-    protected:
+     protected:
         ScannerShPtr CreateScanner() override { return {}; }
     };
 
     FileAnalyzer::AnalyzerShPtr CreateAnalyzerByExtension(const ffinder::File &file, StorageAccessor &accessor);
 }  // namespace suspicious
 
-#endif  // SUSPICIOUSSEARCHUTIL_ANALYZER_H
+#endif  // PROJECT_INCLUDE_ANALYZER_H_

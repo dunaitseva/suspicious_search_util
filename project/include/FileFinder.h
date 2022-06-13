@@ -1,5 +1,5 @@
-#ifndef SUSPICIOUSSEARCHENGINE_FILEFINDER_H
-#define SUSPICIOUSSEARCHENGINE_FILEFINDER_H
+#ifndef PROJECT_INCLUDE_FILEFINDER_H_
+#define PROJECT_INCLUDE_FILEFINDER_H_
 
 #include <Def.h>
 
@@ -14,17 +14,17 @@ namespace suspicious::ffinder {
     namespace fs = std::filesystem;
     namespace exceptions {
         class FinderException : std::exception {
-        public:
+         public:
             const char *what() const noexcept override { return "Finder exception occur"; }
         };
 
         class DirectoryNotFound : FinderException {
-        public:
+         public:
             const char *what() const noexcept override { return "Specified directory not found"; }
         };
 
         class NotDirectory : FinderException {
-        public:
+         public:
             const char *what() const noexcept override { return "Specified filesystem object is not a directory"; }
         };
 
@@ -73,7 +73,7 @@ namespace suspicious::ffinder {
      */
     template <typename Iter>
     class BasicFilesFinder {
-    public:
+     public:
         using IteratorType = Iter;
 
         BasicFilesFinder() = default;
@@ -91,7 +91,7 @@ namespace suspicious::ffinder {
          */
         virtual FileList CreateFilesList() const = 0;
 
-    protected:
+     protected:
         PathType m_dir_name;
     };
 
@@ -129,7 +129,7 @@ namespace suspicious::ffinder {
      */
     template <typename Iter>
     class RegularBasicFileFinder : public BasicFilesFinder<Iter> {
-    public:
+     public:
         using IteratorType = Iter;
         static constexpr std::string_view DefaultPath = ".";
 
@@ -142,7 +142,7 @@ namespace suspicious::ffinder {
 
         FileList CreateFilesList() const override;
 
-    private:
+     private:
         bool IsRegular(const PathType &file) const { return std::filesystem::is_regular_file(file); }
     };
 
@@ -162,4 +162,4 @@ namespace suspicious::ffinder {
     using RRegualarFileFinder = RegularBasicFileFinder<fs::recursive_directory_iterator>;
 }  // namespace suspicious::ffinder
 
-#endif  // SUSPICIOUSSEARCHENGINE_FILEFINDER_H
+#endif  // PROJECT_INCLUDE_FILEFINDER_H_

@@ -5,7 +5,7 @@
 #define _ITERATOR_DEBUG_LEVEL 2
 
 class LightStorageGetAddTests : public ::testing::Test {
-protected:
+ protected:
     suspicious::ExtensionType valid_extension = ".js";
     suspicious::ExtensionType invalid_extension1 = "js";
     suspicious::ExtensionType invalid_extension2 = "..js";
@@ -17,7 +17,7 @@ protected:
 };
 
 class StorageAccessorTests : public ::testing::Test {
-protected:
+ protected:
     suspicious::LightSuspiciousStorage storage;
     suspicious::ExtensionType valid_extension = ".js";
     suspicious::ExtensionType invalid_extension1 = "js";

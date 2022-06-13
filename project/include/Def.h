@@ -1,5 +1,5 @@
-#ifndef SUSPICIOUSSEARCHUTIL_DEF_H
-#define SUSPICIOUSSEARCHUTIL_DEF_H
+#ifndef PROJECT_INCLUDE_DEF_H_
+#define PROJECT_INCLUDE_DEF_H_
 
 #include <filesystem>
 #include <string>
@@ -16,4 +16,4 @@ namespace suspicious {
     using SuspiciousEntrySequence = std::unordered_set<SuspiciousEntryType>;
 }  // namespace suspicious
 
-#endif  // SUSPICIOUSSEARCHUTIL_DEF_H
+#endif  // PROJECT_INCLUDE_DEF_H_

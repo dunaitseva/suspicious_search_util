@@ -1,5 +1,5 @@
-#ifndef SUSPICIOUSSEARCHUTIL_SUSPICIOUSENTRYSTORAGE_H
-#define SUSPICIOUSSEARCHUTIL_SUSPICIOUSENTRYSTORAGE_H
+#ifndef PROJECT_INCLUDE_SUSPICIOUSENTRYSTORAGE_H_
+#define PROJECT_INCLUDE_SUSPICIOUSENTRYSTORAGE_H_
 
 #include <string>
 #include <unordered_map>
@@ -14,7 +14,7 @@ namespace suspicious {
      * At the user side it looks like key-value storage.
      */
     class SuspiciousEntryStorage {
-    public:
+     public:
         static constexpr size_t MIN_EXTENSION_SIZE = 2;
         static constexpr char EXTENSION_DELIMITER = '.';
 
@@ -31,13 +31,13 @@ namespace suspicious {
      * Simplest implementation of SuspiciousEntryStorage. Based on hash table
      */
     class LightSuspiciousStorage : public SuspiciousEntryStorage {
-    public:
+     public:
         using HashtableType = std::unordered_map<ExtensionType, SuspiciousEntrySequence, std::hash<ExtensionType>>;
 
         void Add(const ExtensionType &extension, const SuspiciousEntryType &suspicious_entry) override;
-        virtual SuspiciousEntrySequence Get(const ExtensionType &extension) const override;
+        SuspiciousEntrySequence Get(const ExtensionType &extension) const override;
 
-    private:
+     private:
         HashtableType m_hash_table;
     };
 
@@ -46,7 +46,7 @@ namespace suspicious {
      * @tparam Storage SuspiciousEntryStorage or derived classes
      */
     class StorageAccessor {
-    public:
+     public:
         StorageAccessor() = delete;
         explicit StorageAccessor(const SuspiciousEntryStorage &storage) : m_storage(storage) {}
 
@@ -54,10 +54,10 @@ namespace suspicious {
             return m_storage.Get(extension);
         }
 
-    private:
+     private:
         const SuspiciousEntryStorage &m_storage;
     };
 }  // namespace suspicious
 
 
-#endif  // SUSPICIOUSSEARCHUTIL_SUSPICIOUSENTRYSTORAGE_H
+#endif  // PROJECT_INCLUDE_SUSPICIOUSENTRYSTORAGE_H_
