@@ -8,7 +8,7 @@ constexpr std::string_view TEST_DIRECTORY = "../tests/FileFinderTestData";
 constexpr size_t FILES_AMOUNT = 2;
 constexpr size_t RECURSIVE_FILES_AMOUNT = 2;
 
-TEST(RegularFileFinderTests, ValidDirectory) {
+/*TEST(RegularFileFinderTests, ValidDirectory) {
     suspicious::ffinder::exceptions::ErrorCodes ec;
     suspicious::ffinder::RegualarFileFinder rfinder(TEST_DIRECTORY, ec);
     ASSERT_EQ(ec, suspicious::ffinder::exceptions::ErrorCodes::OK);
@@ -37,4 +37,4 @@ TEST(RegularFileFinderTests, FindFiles) {
     EXPECT_EQ(ec, suspicious::ffinder::exceptions::ErrorCodes::OK);
     auto rfiles_list = rrfinder.CreateFilesList();
     ASSERT_EQ(rfiles_list.size(), RECURSIVE_FILES_AMOUNT);
-}
+}*/

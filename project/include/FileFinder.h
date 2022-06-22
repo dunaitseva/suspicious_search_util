@@ -27,15 +27,6 @@ namespace suspicious::ffinder {
          public:
             const char *what() const noexcept override { return "Specified filesystem object is not a directory"; }
         };
-
-        // The same codes as exception classes
-        enum ErrorCodes {
-            OK,
-            NotDir,
-            NotExist,
-        };
-
-        void LogError(std::ostream &os, const ErrorCodes &ec);
     }  // namespace exceptions
 
     /**
@@ -80,8 +71,6 @@ namespace suspicious::ffinder {
 
         explicit BasicFilesFinder(const PathType &dir_name);
 
-        explicit BasicFilesFinder(const PathType &dir_name, exceptions::ErrorCodes &err_code) noexcept;
-
         virtual ~BasicFilesFinder() = default;
 
         /**
@@ -106,24 +95,6 @@ namespace suspicious::ffinder {
         }
     }
 
-    template <typename Iter>
-    BasicFilesFinder<Iter>::BasicFilesFinder(const PathType &dir_name, exceptions::ErrorCodes &err_code) noexcept
-        : m_dir_name(dir_name) {
-        std::error_code ec;
-        if (!fs::exists(m_dir_name, ec)) {
-            err_code = exceptions::ErrorCodes::NotExist;
-            return;
-        }
-
-        if (!fs::is_directory(m_dir_name, ec)) {
-            err_code = exceptions::ErrorCodes::NotDir;
-            return;
-        }
-
-        err_code = exceptions::ErrorCodes::OK;
-    }
-
-
     /**
      * In fact is BasicFilesFinder for searching only regular files.
      */
@@ -136,9 +107,6 @@ namespace suspicious::ffinder {
         RegularBasicFileFinder() : BasicFilesFinder<Iter>(DefaultPath) {}
 
         explicit RegularBasicFileFinder(const PathType &dir_name) : BasicFilesFinder<Iter>(dir_name) {}
-
-        explicit RegularBasicFileFinder(const PathType &dir_name, exceptions::ErrorCodes &ec)
-            : BasicFilesFinder<Iter>(dir_name, ec) {}
 
         FileList CreateFilesList() const override;
 

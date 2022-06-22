@@ -40,12 +40,7 @@ int main(int argc, char *argv[]) {
         return EXIT_FAILURE;
     }
 
-    suspicious::ffinder::exceptions::ErrorCodes ec;
-    suspicious::ffinder::RRegualarFileFinder finder(argv[PATH_TO_DIRECTORY_ARG], ec);
-    if (ec != suspicious::ffinder::exceptions::ErrorCodes::OK) {
-        suspicious::ffinder::exceptions::LogError(std::cerr, ec);
-        return EXIT_FAILURE;
-    }
+    suspicious::ffinder::RRegualarFileFinder finder(argv[PATH_TO_DIRECTORY_ARG]);
 
     // A constant filter is used, since in the context of this task it is not necessary to
     // change the types of files that the program should analyze

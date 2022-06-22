@@ -17,7 +17,6 @@ add_library(
         ${SOURCE_DIR}/Analyzer.cpp
         ${SOURCE_DIR}/Match.cpp
         ${SOURCE_DIR}/DirectoryReport.cpp
-        ${SOURCE_DIR}/FileFinder.cpp
 )
 target_include_directories(${LIB_NAME} PUBLIC ${INCLUDE_DIR})
 

@@ -3,6 +3,7 @@
 #include <filesystem>
 #include <iostream>
 #include <thread>
+#include <atomic>
 
 #include "Def.h"
 #include "FileFinder.h"
@@ -15,15 +16,17 @@ namespace suspicious {
     using StreamPoolType = std::vector<FileStreamType>;
 
     static void SearchRoutine(FileStreamType &fs, size_t seek, size_t chunk_size, const SuspiciousEntrySequence &seq,
-                              bool &decision) {
+							  std::atomic<bool> &decision) {
         // Just run KMP algorithm for all suspicious entries in seq
         for (const auto &susp_entry : seq) {
             fs.seekg(seek, std::ios_base::beg);
             if (algorithm::KMPFindMatch(fs, chunk_size + susp_entry.size(), susp_entry)) {
                 // If match was found, return from function
-                decision = true;
+				decision.store(true);
                 return;
-            }
+            } else if (decision.load()) {
+			  return;
+			}
         }
     }
 
@@ -34,7 +37,7 @@ namespace suspicious {
         ThreadsPoolType threads_pool{max_threads};
 
         size_t chunk_size = m_file.file_size / max_threads;
-        bool decision = false;
+        std::atomic<bool> decision = false;
         for (size_t i = 0; i < max_threads; ++i) {
             // Open file for every thread
             stream_pool[i].open(m_file.absolute_path, std::ios::in | std::ios::binary);
@@ -57,7 +60,7 @@ namespace suspicious {
             thread.join();
         }
 
-        return decision;
+        return decision.load();
     }
 
     bool JsFileAnalyzer::AnalyzeFile() {
